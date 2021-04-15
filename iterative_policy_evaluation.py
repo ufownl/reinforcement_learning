@@ -23,7 +23,7 @@ class GridWorld:
         self.__states = [State((i, j), size) for i in range(size[0]) for j in range(size[1])]
 
     def train(self, theta, max_iters):
-        for _ in range(max_iters):
+        for i in range(max_iters):
             delta = 0
             for s in self.__states:
                 if s.actions:
@@ -31,7 +31,7 @@ class GridWorld:
                     self.values[s.position] = -1 + 0.25 * sum([self.values[a] for a in s.actions])
                     delta = max(delta, abs(v - self.values[s.position]))
             if delta < theta:
-                break
+                return i + 1
 
 
 if __name__ == "__main__":
@@ -42,5 +42,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     g = GridWorld((args.size, args.size))
-    g.train(args.theta, args.iters)
+    print(g.train(args.theta, args.iters))
     print(g.values)
