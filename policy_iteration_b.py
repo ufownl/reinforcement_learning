@@ -74,7 +74,6 @@ class CarRental:
                 break
             print("Policy", i + 1)
             print(self.policies)
-                
 
 
 if __name__ == "__main__":
