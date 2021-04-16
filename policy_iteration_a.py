@@ -12,16 +12,20 @@ class State:
         self.cars = cars
         self.updates = {}
         for i in range(max_cars + 1):
+            rent_i = min(i, cars[0])
             prob_i = poisson(i, req_e[0])
             for j in range(max_cars + 1):
+                rent_j = min(j, cars[1])
                 prob_j = poisson(j, req_e[1])
-                m_cars = (cars[0] - i if i < cars[0] else 0, cars[1] - j if j < cars[1] else 0)
-                reward = rental * ((i if i < cars[0] else cars[0]) + (j if j < cars[1] else cars[1]))
+                m_cars = (cars[0] - rent_i, cars[1] - rent_j)
+                reward = rental * (rent_i + rent_j)
                 for x in range(max_cars + 1):
+                    cars_x = min(m_cars[0] + x, max_cars)
                     prob_x = poisson(x, ret_e[0])
                     for y in range(max_cars + 1):
+                        cars_y = min(m_cars[1] + y, max_cars)
                         prob_y = poisson(y, ret_e[1])
-                        key = ((m_cars[0] + x if m_cars[0] + x < max_cars else max_cars) * (max_cars + 1) + (m_cars[1] + y if m_cars[1] + y < max_cars else max_cars), reward)
+                        key = (cars_x * (max_cars + 1) + cars_y, reward)
                         if key in self.updates:
                             self.updates[key] += prob_i * prob_j * prob_x * prob_y
                         else:
