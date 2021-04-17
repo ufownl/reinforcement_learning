@@ -1,6 +1,9 @@
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from multiprocessing import cpu_count, Pool
+from utils import StateFactory
+
 
 class State:
     def __init__(self, balance, prob, goal):
@@ -12,7 +15,8 @@ class GamblerProblem:
     def __init__(self, prob, goal):
         self.values = np.zeros(goal + 1)
         self.policies = np.zeros(goal + 1, dtype=int)
-        self.__states = [State(i, prob, goal) for i in range(goal + 1)]
+        with Pool(cpu_count()) as p:
+            self.__states = p.map(StateFactory(State, prob, goal), range(goal + 1))
 
     def train(self, theta, max_iters):
         for i in range(max_iters):

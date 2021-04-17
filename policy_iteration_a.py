@@ -1,6 +1,8 @@
 import math
 import argparse
 import numpy as np
+from multiprocessing import cpu_count, Pool
+from utils import StateFactory
 
 
 def poisson(n, e):
@@ -40,7 +42,8 @@ class CarRental:
     def __init__(self, req_e, ret_e, rental, mv_cost, max_cars, max_mv_cars):
         self.values = np.zeros((max_cars + 1, max_cars + 1))
         self.policies = np.zeros((max_cars + 1, max_cars + 1), dtype=int)
-        self.__states = [State((i, j), req_e, ret_e, rental, mv_cost, max_cars, max_mv_cars) for i in range(max_cars + 1) for j in range(max_cars + 1)]
+        with Pool(cpu_count()) as p:
+            self.__states = p.map(StateFactory(State, req_e, ret_e, rental, mv_cost, max_cars, max_mv_cars), [(i, j) for i in range(max_cars + 1) for j in range(max_cars + 1)])
 
     def train(self, gamma, theta, max_iters):
         for i in range(max_iters):

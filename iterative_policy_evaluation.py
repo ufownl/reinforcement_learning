@@ -1,5 +1,7 @@
 import argparse
 import numpy as np
+from multiprocessing import cpu_count, Pool
+from utils import StateFactory
 
 
 class State:
@@ -20,7 +22,8 @@ class State:
 class GridWorld:
     def __init__(self, size):
         self.values = np.zeros(size)
-        self.__states = [State((i, j), size) for i in range(size[0]) for j in range(size[1])]
+        with Pool(cpu_count()) as p:
+            self.__states = p.map(StateFactory(State, size), [(i, j) for i in range(size[0]) for j in range(size[1])])
 
     def train(self, theta, max_iters):
         for i in range(max_iters):
