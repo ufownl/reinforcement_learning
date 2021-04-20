@@ -45,7 +45,10 @@ class State:
     def hit(self):
         player_sum = self.player_sum + deal_card()
         if player_sum > 21:
-            return (None, -1)
+            if self.usable_ace:
+                return (State(False, player_sum - 10, self.dealer_card), 0)
+            else:
+                return (None, -1)
         else:
             return (State(self.usable_ace, player_sum, self.dealer_card), 0)
 
