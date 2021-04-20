@@ -81,7 +81,7 @@ def train(episodes, stick_threshold):
     for _ in range(episodes):
         episode = init_episode()
         while True:
-            s, r = episode[-1]
+            s, _ = episode[-1]
             if s is None:
                 break
             episode.append(s.hit() if s.player_sum < stick_threshold else s.stick())
