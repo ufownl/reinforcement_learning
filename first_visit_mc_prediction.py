@@ -76,7 +76,7 @@ def init_episode():
 
 
 def train(episodes, stick_threshold):
-    rets = np.zeros((2, 10, 10), dtype=int)
+    values = np.zeros((2, 10, 10))
     n = np.zeros((2, 10, 10), dtype=int)
     for _ in range(episodes):
         episode = init_episode()
@@ -92,10 +92,9 @@ def train(episodes, stick_threshold):
             # if all([episode[i][0].index() != s.index() for i in range(t)]):
             #     In this case, it is impossible for S[t] to occur earlier in an episode
             idx = s.index(False)
-            rets[idx] += g
             n[idx] += 1
-    values = rets / n
-    return np.where(np.isnan(values), 0, values)
+            values[idx] += (g - values[idx]) / n[idx]
+    return values
 
 
 if __name__ == "__main__":
