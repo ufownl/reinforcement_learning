@@ -104,6 +104,35 @@ if __name__ == "__main__":
 
     policies, values = train(args.episodes)
     print(policies)
+
+    print("Simulation Test:")
+    wins = 0
+    loses = 0
+    draws = 0
+    for _ in range(args.episodes):
+        usable_ace = False
+        player_sum = 0
+        while player_sum < 12:
+            card = deal_card()
+            if player_sum < 11 and card == 1:
+                usable_ace = True
+                player_sum += 11
+            else:
+                player_sum += card
+        state = State(usable_ace, player_sum, deal_card())
+        while not state is None:
+            action = policies[state.index(False)]
+            state, reward = state.hit() if action == 0 else state.stick()
+        if reward > 0:
+            wins += 1
+        elif reward < 0:
+            loses += 1
+        else:
+            draws += 1
+    print("Wins %d / %d" % (wins, args.episodes))
+    print("Loses %d / %d" % (loses, args.episodes))
+    print("Draws %d / %d" % (draws, args.episodes))
+
     x, y = np.meshgrid(np.linspace(1, 10, 10), np.linspace(12, 21, 10))
     ax = plt.subplot(1, 2, 1, projection="3d")
     ax.plot_surface(x, y, np.where(policies[0], values[0, :, :, 1], values[0, :, :, 0]))
