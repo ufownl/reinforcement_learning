@@ -30,7 +30,7 @@ class NonstationaryBandit:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Nonstationary bandit algorithm (Chapter 2.5).")
+    parser = argparse.ArgumentParser(description="Nonstationary bandit algorithm (Section 2.5).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 2000)", type=int, default=2000)
     parser.add_argument("--steps", help="total number of time-steps (default: 10000)", type=int, default=10000)
     parser.add_argument("--alpha", help="constant step-size parameter (default 0.1)", type=float, default=0.1)

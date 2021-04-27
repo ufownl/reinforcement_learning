@@ -39,7 +39,7 @@ class UCBBandit:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Upper-Confidence-Bound action selection (Chapter 2.7).")
+    parser = argparse.ArgumentParser(description="Upper-Confidence-Bound action selection (Section 2.7).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 2000)", type=int, default=2000)
     parser.add_argument("--steps", help="total number of time-steps (default: 1000)", type=int, default=1000)
     parser.add_argument("--confidence", help="confidence level the measure of uncertainty (default: 1.0)", type=float, default=1.0)

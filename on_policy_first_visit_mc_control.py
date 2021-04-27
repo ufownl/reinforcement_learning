@@ -119,7 +119,7 @@ def train(episodes, epsilon):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="On-policy first-visit MC control (Chapter 5.4).")
+    parser = argparse.ArgumentParser(description="On-policy first-visit MC control (Section 5.4).")
     parser.add_argument("--episodes", help="number of episodes (default: 1000000)", type=int, default=1000000)
     parser.add_argument("--epsilon", help="probability of exploration (default: 0.2)", type=float, default=0.2)
     args = parser.parse_args()

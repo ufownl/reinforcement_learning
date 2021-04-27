@@ -45,7 +45,7 @@ class GradientBandit:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Gradient bandit algorithm (Chapter 2.8).")
+    parser = argparse.ArgumentParser(description="Gradient bandit algorithm (Section 2.8).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 2000)", type=int, default=2000)
     parser.add_argument("--steps", help="total number of time-steps (default: 1000)", type=int, default=1000)
     parser.add_argument("--alpha", help="constant step-size parameter (default 0.25)", type=float, default=0.25)
