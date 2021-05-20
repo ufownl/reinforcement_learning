@@ -2,7 +2,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import cpu_count, Pool
-from utils import StateFactory
+from utils.parallel import StateFactory
 
 
 class State:

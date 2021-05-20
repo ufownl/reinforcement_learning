@@ -2,7 +2,7 @@ import random
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from blackjack import deal_card, State
+from utils.blackjack import deal_card, State
 
 
 def init_episode():

@@ -2,7 +2,7 @@ import math
 import argparse
 import numpy as np
 from multiprocessing import cpu_count, Pool
-from utils import StateFactory
+from utils.parallel import StateFactory
 
 
 def poisson(n, e):

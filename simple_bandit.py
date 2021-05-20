@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import cpu_count, Pool
-from utils import Runner
+from utils.parallel import Runner
 
 
 class SimpleBandit:

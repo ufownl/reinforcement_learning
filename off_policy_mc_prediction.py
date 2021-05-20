@@ -3,8 +3,8 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import cpu_count, Pool
-from blackjack import State
-from utils import Runner
+from utils.blackjack import State
+from utils.parallel import Runner
 
 
 def execute_policy(policy):
