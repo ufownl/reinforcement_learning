@@ -56,7 +56,7 @@ def train(episodes):
             target_policies[idx[:-1]] = optimum
             if a != optimum:
                 break
-            w *= 1 / behavior_policies[idx]
+            w /= behavior_policies[idx]
     return target_policies, values
 
 
