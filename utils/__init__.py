@@ -1,1 +1,1 @@
-__all__ = ["parallel", "blackjack"]
+__all__ = ["parallel", "blackjack", "racetrack"]
