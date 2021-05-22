@@ -30,21 +30,26 @@ def execute_policy(policy):
     return None
 
 
+def generate_episode(racetrack, policies):
+    s = init_state(racetrack)
+    episode = [(s, None, execute_policy(policies[s.index]))]
+    while True:
+        s, _, a = episode[-1]
+        s1, r1, _ = s.transition(a)
+        if s1 is None:
+            episode.append((s1, r1, None))
+            break
+        else:
+            episode.append((s1, r1, execute_policy(policies[s1.index])))
+    return episode
+
+
 def pretrain(racetrack, episodes, epsilon):
     policies = init_policy(racetrack)
     values = np.zeros(racetrack.shape + (5, 5, 9))
     n = np.zeros_like(values, dtype=int)
     for _ in range(episodes):
-        s = init_state(racetrack)
-        episode = [(s, None, execute_policy(policies[s.index]))]
-        while True:
-            s, _, a = episode[-1]
-            s1, r1, _ = s.transition(a)
-            if s1 is None:
-                episode.append((s1, r1, None))
-                break
-            else:
-                episode.append((s1, r1, execute_policy(policies[s1.index])))
+        episode = generate_episode(racetrack, policies)
         g = 0
         for t in reversed(range(len(episode) - 1)):
             g += episode[t + 1][1]
@@ -64,16 +69,7 @@ def train(racetrack, episodes, epsilon, behavior_policies, values):
     c = np.zeros_like(values)
     target_policies = np.argmax(behavior_policies, axis=-1)
     for _ in range(episodes):
-        s = init_state(racetrack)
-        episode = [(s, None, execute_policy(behavior_policies[s.index]))]
-        while True:
-            s, _, a = episode[-1]
-            s1, r1, _ = s.transition(a)
-            if s1 is None:
-                episode.append((s1, r1, None))
-                break
-            else:
-                episode.append((s1, r1, execute_policy(behavior_policies[s1.index])))
+        episode = generate_episode(racetrack, behavior_policies)
         g = 0
         w = 1
         for t in reversed(range(len(episode) - 1)):
