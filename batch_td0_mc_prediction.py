@@ -1,5 +1,6 @@
 import argparse
 
+
 def td_evaluate(batch, epochs, alpha):
     values = [0, 0]
     for _ in range(epochs):
