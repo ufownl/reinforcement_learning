@@ -105,8 +105,8 @@ if __name__ == "__main__":
         raise ValueError("Invalid layout")
     print("On-policy pre-training...")
     policies, values = pretrain(racetrack, args.pretraining_episodes, args.epsilon)
-    print("Off-policy pre-training...")
-    policies, values = train(racetrack, args.episodes, args.epsilon, policies, values)
+    print("Off-policy training...")
+    policies, _ = train(racetrack, args.episodes, args.epsilon, policies, values)
     print("Done!")
 
     if args.layout.lower() == "left":
