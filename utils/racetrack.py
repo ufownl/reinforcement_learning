@@ -73,8 +73,7 @@ def bresenham_line(pt0, pt1):
 class State:
     __actions = [(i - 1, j - 1) for i in range(3) for j in range(3)]
 
-    def __init__(self, racetrack, position, velocity):
-        self.__racetrack = racetrack
+    def __init__(self, position, velocity):
         self.__pos_x, self.__pos_y = position
         self.__vel_x, self.__vel_y = velocity
 
@@ -94,7 +93,7 @@ class State:
     def actions(self):
         return [i for i, (ax, ay) in enumerate(self.__actions) if self.__vel_x + ax >= 0 and self.__vel_x + ax < 5 and self.__vel_y + ay >= 0 and self.__vel_y + ay < 5 and (self.__vel_x + ax != 0 or self.__vel_y + ay != 0)]
 
-    def transition(self, action):
+    def transition(self, racetrack, action):
         ax, ay = self.__actions[action]
         vx = self.__vel_x + ax
         vy = self.__vel_y + ay
@@ -107,10 +106,10 @@ class State:
         py = self.__pos_y + vy
         trajectory = [p for p in bresenham_line((self.__pos_x, self.__pos_y), (px, py))]
         for x, y in trajectory[1:]:
-            if x < 0 or x >= self.__racetrack.shape[0] or y < 0 or y >= self.__racetrack.shape[1]:
-                return (State(self.__racetrack, random.choice(np.array(np.where(self.__racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
-            elif self.__racetrack[x, y] < 0:
-                return (State(self.__racetrack, random.choice(np.array(np.where(self.__racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
-            elif self.__racetrack[x, y] == 2:
+            if x < 0 or x >= racetrack.shape[0] or y < 0 or y >= racetrack.shape[1]:
+                return (State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
+            elif racetrack[x, y] < 0:
+                return (State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
+            elif racetrack[x, y] == 2:
                 return (None, 0, trajectory)
-        return (State(self.__racetrack, (px, py), (vx, vy)), -1, trajectory)
+        return (State((px, py), (vx, vy)), -1, trajectory)

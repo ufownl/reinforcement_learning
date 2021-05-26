@@ -6,14 +6,14 @@ from utils.racetrack import layout_left, layout_right, visualize, State
 
 
 def init_state(racetrack):
-    return State(racetrack, random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0))
+    return State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0))
 
 
 def init_policy(racetrack):
     policies = np.zeros(racetrack.shape + (5, 5, 9))
     for vx in range(policies.shape[2]):
         for vy in range(policies.shape[3]):
-            actions = State(None, (0, 0), (vx, vy)).actions
+            actions = State((0, 0), (vx, vy)).actions
             p = 1 / len(actions)
             for i, a in enumerate(actions):
                 policies[:, :, vx, vy, a] = p
@@ -35,7 +35,7 @@ def generate_episode(racetrack, policies):
     episode = [(s, None, execute_policy(policies[s.index]))]
     while True:
         s, _, a = episode[-1]
-        s1, r1, _ = s.transition(a)
+        s1, r1, _ = s.transition(racetrack, a)
         if s1 is None:
             episode.append((s1, r1, None))
             break
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     while not state is None:
         layout[state.position] = 3
         action = policies[state.index]
-        state, _, trajectory = state.transition(action)
+        state, _, trajectory = state.transition(racetrack, action)
         for p in trajectory[1:]:
             try:
                 layout[p] = 4
