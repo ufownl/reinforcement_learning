@@ -101,7 +101,7 @@ class OffPolicyPrediction:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="off-policy MC prediction (Example 5.4, Section 5.6).")
+    parser = argparse.ArgumentParser(description="off-policy MC prediction (Section 5.6, Example 5.4).")
     parser.add_argument("--dealer_card", help="dealer's showing card at the initial state (default: 2)", type=int, default=2)
     parser.add_argument("--player_sum", help="sum of the player's cards at the initial state (default: 13)", type=int, default=13)
     parser.add_argument("--no_usable_ace", help="player has no usable ace at the initial state", action="store_true")

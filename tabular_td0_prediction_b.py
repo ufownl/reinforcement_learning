@@ -34,7 +34,7 @@ def train(episodes, alpha, stick_threshold):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="first-visit MC prediction (Example 5.1).")
+    parser = argparse.ArgumentParser(description="Tabular TD(0) prediction (Section 6.1, Example 5.1).")
     parser.add_argument("--episodes", help="number of episodes (default: 500000)", type=int, default=500000)
     parser.add_argument("--alpha", help="constant step-size parameter of TD(0) (default: 0.01)", type=float, default=0.01)
     parser.add_argument("--stick_threshold", help="lower threshold of stick action (default: 20)", type=int, default=20)

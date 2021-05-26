@@ -61,7 +61,7 @@ def train(episodes):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Off-policy MC control (Section 5.7).")
+    parser = argparse.ArgumentParser(description="Off-policy MC control (Section 5.7, Example 5.3).")
     parser.add_argument("--episodes", help="number of episodes (default: 1000000)", type=int, default=1000000)
     args = parser.parse_args()
 
