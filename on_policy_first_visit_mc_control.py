@@ -53,8 +53,8 @@ def train(episodes, epsilon):
             n[idx] += 1
             values[idx] += (g - values[idx]) / n[idx]
             optimum = np.argmax(values[idx[:-1]])
-            for a in range(2):
-                policies[idx[:-1] + (a,)] = 1 - epsilon + epsilon / 2 if a == optimum else epsilon / 2
+            policies[idx[:-1]] = epsilon / 2
+            policies[idx[:-1] + (optimum,)] += 1 - epsilon
     return np.argmax(policies, axis=-1), values
 
 
