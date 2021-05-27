@@ -51,7 +51,7 @@ def train(racetrack, episodes, alpha, epsilon):
                 policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
             state = s1
             action = a1
-    return policies, values
+    return np.argmax(policies, axis=-1), values
 
 
 if __name__ == "__main__":
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     state = init_state(racetrack)
     while not state is None:
         layout[state.position] = 3
-        action = np.argmax(policies[state.index])
+        action = policies[state.index]
         state, _, trajectory = state.transition(racetrack, action)
         for p in trajectory[1:]:
             try:
