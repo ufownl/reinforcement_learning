@@ -2,11 +2,7 @@ import random
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from utils.racetrack import layout_left, layout_right, visualize, State
-
-
-def init_state(racetrack):
-    return State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0))
+from utils.racetrack import layout_left, layout_right, State, init_state, visualize
 
 
 def init_policy(racetrack):
@@ -73,21 +69,5 @@ if __name__ == "__main__":
     policies, _ = train(racetrack, args.episodes, args.alpha, args.epsilon)
     print("Done!")
 
-    if args.layout.lower() == "left":
-        layout = layout_left()
-    elif args.layout.lower() == "right":
-        layout = layout_right()
-    else:
-        raise ValueError("Invalid layout")
-    state = init_state(racetrack)
-    while not state is None:
-        layout[state.position] = 3
-        action = policies[state.index]
-        state, _, trajectory = state.transition(racetrack, action)
-        for p in trajectory[1:]:
-            try:
-                layout[p] = 4
-            except IndexError:
-                continue
-    visualize(layout)
+    visualize(racetrack, policies)
     plt.show()

@@ -48,10 +48,6 @@ def layout_right():
     return racetrack
 
 
-def visualize(layout):
-    plt.imshow(layout + 1, cmap=ListedColormap(["gray", "white", "darkorange", "green", "red", "gold"]), vmax=5)
-
-
 def bresenham_line(pt0, pt1):
     yield pt0
     dx = abs(pt1[0] - pt0[0])
@@ -107,9 +103,28 @@ class State:
         trajectory = [p for p in bresenham_line((self.__pos_x, self.__pos_y), (px, py))]
         for x, y in trajectory[1:]:
             if x < 0 or x >= racetrack.shape[0] or y < 0 or y >= racetrack.shape[1]:
-                return (State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
+                return (init_state(racetrack), -1, trajectory)
             elif racetrack[x, y] < 0:
-                return (State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0)), -1, trajectory)
+                return (init_state(racetrack), -1, trajectory)
             elif racetrack[x, y] == 2:
                 return (None, 0, trajectory)
         return (State((px, py), (vx, vy)), -1, trajectory)
+
+
+def init_state(racetrack):
+    return State(random.choice(np.array(np.where(racetrack == 1)).transpose().tolist()), (0, 0))
+
+
+def visualize(racetrack, policies):
+    result = np.copy(racetrack)
+    state = init_state(racetrack)
+    while not state is None:
+        result[state.position] = 3
+        action = policies[state.index]
+        state, _, trajectory = state.transition(racetrack, action)
+        for p in trajectory[1:]:
+            try:
+                result[p] = 4
+            except IndexError:
+                continue
+    plt.imshow(result + 1, cmap=ListedColormap(["gray", "white", "darkorange", "green", "red", "gold"]), vmax=5)
