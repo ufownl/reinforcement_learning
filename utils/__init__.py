@@ -1,1 +1,1 @@
-__all__ = ["parallel", "blackjack", "racetrack", "windy_gridworld"]
+__all__ = ["parallel", "blackjack", "racetrack", "windy_gridworld", "cliff_walking"]
