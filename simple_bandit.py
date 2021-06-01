@@ -23,7 +23,7 @@ class SimpleBandit:
     def __bandit(self, idx):
         return random.gauss(*self.__actions[idx])
 
-    def run(self, steps, epsilon, q1):
+    def __call__(self, steps, epsilon, q1):
         r = np.zeros(steps)
         q = np.ones(len(self.__actions)) * q1
         n = np.zeros(len(self.__actions))

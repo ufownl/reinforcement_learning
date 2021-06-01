@@ -14,7 +14,7 @@ class NonstationaryBandit:
         self.__actions += np.random.normal(0.0, 0.01, self.__actions.shape)
         return self.__actions[idx]
 
-    def run(self, steps, alpha, epsilon):
+    def __call__(self, steps, alpha, epsilon):
         r = np.zeros(steps)
         q = np.zeros(len(self.__actions))
         o = alpha

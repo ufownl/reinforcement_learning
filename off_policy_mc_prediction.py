@@ -96,7 +96,7 @@ class OffPolicyPrediction:
     def __init__(self, f):
         self.__f = f
 
-    def run(self, episodes, state, target_policies, behavior_policies):
+    def __call__(self, episodes, state, target_policies, behavior_policies):
         return np.array([v for v in self.__f(episodes, state, target_policies, behavior_policies)])
 
 

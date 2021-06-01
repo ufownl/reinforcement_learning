@@ -6,8 +6,8 @@ class Runner:
         self.__args = args
         self.__kwargs = kwargs
 
-    def __call__(self, x):
-        return np.expand_dims(x.run(*self.__args, **self.__kwargs), 0)
+    def __call__(self, f):
+        return np.expand_dims(f(*self.__args, **self.__kwargs), 0)
 
 
 class StateFactory:

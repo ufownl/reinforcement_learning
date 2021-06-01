@@ -24,7 +24,7 @@ class GradientBandit:
     def __bandit(self, idx):
         return random.gauss(*self.__actions[idx])
 
-    def run(self, steps, alpha):
+    def __call__(self, steps, alpha):
         r = np.zeros(steps)
         q = np.zeros(len(self.__actions))
         n = np.zeros(len(self.__actions))

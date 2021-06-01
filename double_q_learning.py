@@ -68,7 +68,7 @@ class MaximizationBias:
     def __init__(self, f):
         self.__f = f
 
-    def run(self, episodes, alpha, epsilon):
+    def __call__(self, episodes, alpha, epsilon):
         return np.array([v for v in self.__f(episodes, alpha, epsilon)])
 
 
