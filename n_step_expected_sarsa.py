@@ -46,9 +46,9 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 episode.append((s1, r1, a1))
             update_t = t - steps + 1
             if update_t >= 0:
-                g = sum([episode[i][1] for i in range(update_t + 1, min(update_t + steps, terminal_t) + 1)])
+                g = sum([r for _, r, _ in episode[update_t+1:]])
                 if update_t + steps < terminal_t:
-                    s, _, _ = episode[update_t + steps]
+                    s, _, _ = episode[-1]
                     g += np.sum(policies[s.index] * values[s.index])
                 state, _, action = episode[update_t]
                 index = state.index + (action,)
@@ -61,7 +61,6 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 break
             t += 1
     return np.argmax(policies, axis=-1), values
-
 
 
 if __name__ == "__main__":

@@ -41,9 +41,9 @@ def train(episodes, alpha, steps):
                     terminal_t = t + 1
             update_t = t - steps + 1
             if update_t >= 0:
-                g = sum([episode[i][1] for i in range(update_t + 1, min(update_t + steps, terminal_t) + 1)])
+                g = sum([r for _, r in episode[update_t+1:]])
                 if update_t + steps < terminal_t:
-                    g += values[episode[update_t + steps][0].index]
+                    g += values[episode[-1][0].index]
                 values[episode[update_t][0].index] += alpha * (g - values[episode[update_t][0].index])
             if update_t == terminal_t - 1:
                 break
