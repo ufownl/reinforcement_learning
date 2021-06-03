@@ -69,7 +69,7 @@ if __name__ == "__main__":
     parser.add_argument("--episodes", help="number of training episodes (default: 100000)", type=int, default=100000)
     parser.add_argument("--alpha", help="constant step-size parameter of TD (default: 0.1)", type=float, default=0.1)
     parser.add_argument("--epsilon", help="probability of exploration (default: 0.2)", type=float, default=0.2)
-    parser.add_argument("--steps", help="number of steps before bootstrapping", type=int, default=8)
+    parser.add_argument("--steps", help="number of steps before bootstrapping (default: 8)", type=int, default=8)
     args = parser.parse_args()
 
     if args.layout.lower() == "left":
