@@ -11,7 +11,7 @@ def init_policy(racetrack):
         for vy in range(policies.shape[3]):
             actions = State((0, 0), (vx, vy)).actions
             p = 1 / len(actions)
-            for i, a in enumerate(actions):
+            for a in actions:
                 policies[:, :, vx, vy, a] = p
     return policies
 
