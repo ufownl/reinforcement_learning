@@ -30,26 +30,20 @@ def train(racetrack, episodes, alpha, epsilon, steps):
     policies = init_policy(racetrack)
     values = np.zeros(racetrack.shape + (5, 5, 9))
     for _ in range(episodes):
-        s = init_state(racetrack)
-        episode = [(s, None, execute_policy(policies[s.index]))]
-        terminal_t = float("inf")
+        state = init_state(racetrack)
+        episode = [(state, None, execute_policy(policies[state.index]))]
         t = 0
         while True:
-            if t < terminal_t:
-                s, _, a = episode[-1]
-                s1, r1, _ = s.transition(racetrack, a)
-                if s1 is None:
-                    a1 = None
-                    terminal_t = t + 1
-                else:
-                    a1 = execute_policy(policies[s1.index])
-                episode.append((s1, r1, a1))
-            update_t = t - steps + 1
+            state, _, action = episode[-1]
+            if not state is None:
+                s1, r1, _ = state.transition(racetrack, action)
+                episode.append((s1, r1, None if s1 is None else execute_policy(policies[s1.index])))
+            update_t = t + 1 - steps
             if update_t >= 0:
                 g = sum([r for _, r, _ in episode[update_t+1:]])
-                if update_t + steps < terminal_t:
-                    s, _, _ = episode[-1]
-                    g += np.sum(policies[s.index] * values[s.index])
+                state, _, _ = episode[-1]
+                if not state is None:
+                    g += np.sum(policies[state.index] * values[state.index])
                 state, _, action = episode[update_t]
                 index = state.index + (action,)
                 values[index] += alpha * (g - values[index])
@@ -57,8 +51,8 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
                 for a in state_actions:
                     policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
-            if update_t == terminal_t - 1:
-                break
+                if episode[update_t + 1][0] is None:
+                    break
             t += 1
     return np.argmax(policies, axis=-1), values
 

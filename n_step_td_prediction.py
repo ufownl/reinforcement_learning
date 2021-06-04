@@ -32,21 +32,21 @@ def train(episodes, alpha, steps):
     values = np.zeros(19)
     for _ in range(episodes):
         episode = [(State(), None)]
-        terminal_t = float("inf")
         t = 0
         while True:
-            if t < terminal_t:
-                episode.append(episode[-1][0].transition())
-                if episode[-1][0] is None:
-                    terminal_t = t + 1
+            state, _ = episode[-1]
+            if not state is None:
+                episode.append(state.transition())
             update_t = t - steps + 1
             if update_t >= 0:
                 g = sum([r for _, r in episode[update_t+1:]])
-                if update_t + steps < terminal_t:
-                    g += values[episode[-1][0].index]
-                values[episode[update_t][0].index] += alpha * (g - values[episode[update_t][0].index])
-            if update_t == terminal_t - 1:
-                break
+                state, _ = episode[-1]
+                if not state is None:
+                    g += values[state.index]
+                state, _ = episode[update_t]
+                values[state.index] += alpha * (g - values[state.index])
+                if episode[update_t + 1][0] is None:
+                    break
             t += 1
     return values
 
