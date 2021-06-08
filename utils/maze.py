@@ -23,6 +23,18 @@ def init_blocking_mazes():
     return (maze0, maze1)
 
 
+def init_shortcut_mazes():
+    maze0 = np.zeros((6, 9), dtype=int)
+    maze0[5, 3] = 1
+    maze0[0, 8] = 2
+    maze0[3, 1:9] = -1
+    maze1 = np.zeros_like(maze0)
+    maze1[5, 3] = 1
+    maze1[0, 8] = 2
+    maze1[3, 1:8] = -1
+    return (maze0, maze1)
+
+
 class State:
     __actions = [
         (-1, 0),
