@@ -7,7 +7,7 @@ from utils.parallel import Runner
 
 
 class State:
-    true_values = np.array([i / 20 for i in range(1, 20)])
+    true_values = np.arange(-18, 20, 2) / 20
 
     def __init__(self, index=9):
         if index < 0 or index > 18:
@@ -21,7 +21,7 @@ class State:
     def transition(self):
         index = self.__index + random.choice([-1, 1])
         if index < 0:
-            return (None, 0)
+            return (None, -1)
         elif index > 18:
             return (None, 1)
         else:
