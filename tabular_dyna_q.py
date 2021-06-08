@@ -57,7 +57,7 @@ if __name__ == "__main__":
     print("Training...")
     with Pool(cpu_count()) as p:
         for steps in [0, 5, 50]:
-            plt.plot(np.mean(np.concatenate(p.map(Runner(maze, args.episodes, args.alpha, args.gamma, args.epsilon, steps), [steps_per_episode for _ in range(args.rounds)])), 0), label="%d planning steps"%steps)
+            plt.plot([e + 1 for e in range(args.episodes)], np.mean(np.concatenate(p.map(Runner(maze, args.episodes, args.alpha, args.gamma, args.epsilon, steps), [steps_per_episode for _ in range(args.rounds)])), 0), label="%d planning steps"%steps)
     print("Done!")
     plt.grid(True)
     plt.legend()
