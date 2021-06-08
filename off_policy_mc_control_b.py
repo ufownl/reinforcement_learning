@@ -55,9 +55,9 @@ def pretrain(racetrack, episodes, epsilon):
                 n[index] += 1
                 values[index] += (g - values[index]) / n[index]
                 state_actions = state.actions
-                optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+                optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
                 for a in state_actions:
-                    policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                    policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
     return policies, values
 
 
@@ -75,9 +75,9 @@ def train(racetrack, episodes, epsilon, behavior_policies, values):
             c[index] += w
             values[index] += (g - values[index]) * w / c[index] if c[index] > 0 else 0
             state_actions = state.actions
-            optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+            optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
             for a in state_actions:
-                behavior_policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                behavior_policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
             target_policies[state.index] = optimum
             if action != optimum:
                 break

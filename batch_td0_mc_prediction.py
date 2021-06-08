@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", help="number of epochs (default: 10000)", type=int, default=10000)
     parser.add_argument("--alpha", help="constant step-size parameter of TD(0) (default: 0.1)", type=float, default=0.1)
     args = parser.parse_args()
-    
+
     batch = [
         [(0, 0), (1, 0)],
         [(1, 1)],

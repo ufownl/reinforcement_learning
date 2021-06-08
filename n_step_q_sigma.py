@@ -45,26 +45,26 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 else:
                     a1 = execute_policy(behavior_policies[s1.index])
                     sigma = random.uniform(0, 1)
-                    ratio = 1 / behavior_policies[s1.index + (a1,)] if a1 == target_policies[s1.index] else 0
+                    ratio = 1 / behavior_policies[s1.index][a1] if a1 == target_policies[s1.index] else 0
                 episode.append((s1, r1, a1, sigma, ratio))
             update_t = t + 1 - steps
             if update_t >= 0:
                 state, _, action, _, _ = episode[-1]
                 if not state is None:
-                    g = values[state.index + (action,)]
+                    g = values[state.index][action]
                 for sk, rk, ak, sigma, ratio in reversed(episode[update_t+1:]):
                     if sk is None:
                         g = rk
                     else:
                         a = target_policies[sk.index]
-                        g = rk + (sigma * ratio + (1 - sigma) * (a == ak)) * (g - values[sk.index + (ak,)]) + values[sk.index + (a,)]
+                        g = rk + (sigma * ratio + (1 - sigma) * (a == ak)) * (g - values[sk.index][ak]) + values[sk.index][a]
                 state, _, action, _, _ = episode[update_t]
                 index = state.index + (action,)
                 values[index] += alpha * (g - values[index])
                 state_actions = state.actions
-                optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+                optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
                 for a in state_actions:
-                    behavior_policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                    behavior_policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
                 target_policies[state.index] = optimum
                 if episode[update_t + 1][0] is None:
                     break

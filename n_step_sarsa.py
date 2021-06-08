@@ -43,14 +43,14 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 g = sum([r for _, r, _ in episode[update_t+1:]])
                 state, _, action = episode[-1]
                 if not state is None:
-                    g += values[state.index + (action,)]
+                    g += values[state.index][action]
                 state, _, action = episode[update_t]
                 index = state.index + (action,)
                 values[index] += alpha * (g - values[index])
                 state_actions = state.actions
-                optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+                optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
                 for a in state_actions:
-                    policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                    policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
                 if episode[update_t + 1][0] is None:
                     break
             t += 1

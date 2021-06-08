@@ -35,7 +35,7 @@ def train(maze, episodes, alpha, gamma, epsilon, steps):
                 actions = model[s]
                 a = random.choice(list(actions))
                 s1, r = actions[a]
-                values[s + (a,)] += alpha * (r + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s + (a,)])
+                values[s][a] += alpha * (r + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s][a])
             t += 1
         yield t
 

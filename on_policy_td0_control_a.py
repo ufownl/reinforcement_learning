@@ -40,11 +40,11 @@ def train(racetrack, episodes, alpha, epsilon):
                 values[index] += alpha * (r - values[index])
             else:
                 a1 = execute_policy(policies[s1.index])
-                values[index] += alpha * (r + values[s1.index + (a1,)] - values[index])
+                values[index] += alpha * (r + values[s1.index][a1] - values[index])
             state_actions = state.actions
-            optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+            optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
             for a in state_actions:
-                policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
             state = s1
             action = a1
     return np.argmax(policies, axis=-1), values

@@ -43,7 +43,7 @@ def dyna_q(mazes, time_steps, alpha, gamma, epsilon, planning_steps):
                 actions = model[s]
                 a = random.choice(list(actions))
                 s1, r = actions[a]
-                values[s + (a,)] += alpha * (r + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s + (a,)])
+                values[s][a] += alpha * (r + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s][a])
             t += 1
             if t >= time_steps:
                 return
@@ -79,7 +79,7 @@ def dyna_q_plus(mazes, time_steps, alpha, gamma, epsilon, kappa, planning_steps)
                 actions = model[s]
                 a = random.randrange(0, len(actions))
                 s1, r, t = actions[a]
-                values[s + (a,)] += alpha * (r + kappa * math.sqrt(now - t) + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s + (a,)])
+                values[s][a] += alpha * (r + kappa * math.sqrt(now - t) + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s][a])
             now += 1
             if now >= time_steps:
                 return

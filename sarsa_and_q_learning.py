@@ -24,7 +24,7 @@ def sarsa(world, episodes, alpha, epsilon):
                 values[index] += alpha * (r - values[index])
                 break
             a1 = execute_policy(values[s1.index], epsilon)
-            values[index] += alpha * (r + values[s1.index + (a1,)] - values[index])
+            values[index] += alpha * (r + values[s1.index][a1] - values[index])
             state = s1
             action = a1
     return np.argmax(values, axis=-1), values

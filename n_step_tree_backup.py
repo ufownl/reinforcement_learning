@@ -44,20 +44,20 @@ def train(racetrack, episodes, alpha, epsilon, steps):
                 state, reward, _ = episode[-1]
                 g = reward
                 if not state is None:
-                    g += values[state.index + (target_policies[state.index],)]
+                    g += values[state.index][target_policies[state.index]]
                 for sk, rk, ak in reversed(episode[update_t+1:-1]):
                     a = target_policies[sk.index]
                     if a == ak:
                         g += rk
                     else:
-                        g = rk + values[sk.index + (a,)]
+                        g = rk + values[sk.index][a]
                 state, _, action = episode[update_t]
                 index = state.index + (action,)
                 values[index] += alpha * (g - values[index])
                 state_actions = state.actions
-                optimum = state_actions[np.argmax([values[state.index + (a,)] for a in state_actions])]
+                optimum = state_actions[np.argmax([values[state.index][a] for a in state_actions])]
                 for a in state_actions:
-                    behavior_policies[state.index + (a,)] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions) 
+                    behavior_policies[state.index][a] = 1 - epsilon + epsilon / len(state_actions) if a == optimum else epsilon / len(state_actions)
                 target_policies[state.index] = optimum
                 if episode[update_t + 1][0] is None:
                     break
