@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import cpu_count, Pool
 from utils.parallel import Runner
-from utils.maze import init_shortcut_mazes, State
+from utils.maze import init_blocking_mazes, init_shortcut_mazes, State
 
 
 def execute_policy(value, epsilon):
@@ -15,7 +15,7 @@ def execute_policy(value, epsilon):
         return np.argmax(value)
 
 
-def dyna_q(mazes, time_steps, alpha, gamma, epsilon, planning_steps):
+def dyna_q(mazes, time_steps, switch_step, alpha, gamma, epsilon, planning_steps):
     if mazes[0].shape != mazes[1].shape:
         raise ValueError("Invalid mazes")
     maze = mazes[0]
@@ -47,11 +47,11 @@ def dyna_q(mazes, time_steps, alpha, gamma, epsilon, planning_steps):
             t += 1
             if t >= time_steps:
                 return
-            if t == 3000:
+            if t == switch_step:
                 maze = mazes[1]
 
 
-def dyna_q_plus(mazes, time_steps, alpha, gamma, epsilon, kappa, planning_steps):
+def dyna_q_plus(mazes, time_steps, switch_step, alpha, gamma, epsilon, kappa, planning_steps):
     if mazes[0].shape != mazes[1].shape:
         raise ValueError("Invalid mazes")
     maze = mazes[0]
@@ -83,11 +83,11 @@ def dyna_q_plus(mazes, time_steps, alpha, gamma, epsilon, kappa, planning_steps)
             now += 1
             if now >= time_steps:
                 return
-            if now == 3000:
+            if now == switch_step:
                 maze = mazes[1]
 
 
-def altered_dyna_q_plus(mazes, time_steps, alpha, gamma, epsilon, kappa, planning_steps):
+def altered_dyna_q_plus(mazes, time_steps, switch_step, alpha, gamma, epsilon, kappa, planning_steps):
     if mazes[0].shape != mazes[1].shape:
         raise ValueError("Invalid mazes")
     maze = mazes[0]
@@ -117,12 +117,12 @@ def altered_dyna_q_plus(mazes, time_steps, alpha, gamma, epsilon, kappa, plannin
                 s = random.choice(list(model))
                 actions = model[s]
                 a = random.randrange(0, len(actions))
-                s1, r, t = actions[a]
+                s1, r, _ = actions[a]
                 values[s][a] += alpha * (r + (0 if s1 is None else gamma * np.max(values[s1.index])) - values[s][a])
             now += 1
             if now >= time_steps:
                 return
-            if now == 3000:
+            if now == switch_step:
                 maze = mazes[1]
 
 
@@ -135,9 +135,8 @@ class CumulativeReward:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Tabular Dyna-Q+ (Example 8.3, Exercise 8.4).")
+    parser = argparse.ArgumentParser(description="Tabular Dyna-Q+ (Example 8.2, Example 8.3, Exercise 8.4).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 30)", type=int, default=30)
-    parser.add_argument("--time_steps", help="number of time steps (default: 6000)", type=int, default=6000)
     parser.add_argument("--alpha", help="constant step-size parameter of TD (default: 1.0)", type=float, default=1.0)
     parser.add_argument("--gamma", help="discount rate of reward (default: 0.95)", type=float, default=0.95)
     parser.add_argument("--epsilon", help="probability of exploration (default: 0.1)", type=float, default=0.1)
@@ -145,15 +144,29 @@ if __name__ == "__main__":
     parser.add_argument("--planning_steps", help="number of planning steps (default: 50)", type=int, default=50)
     args = parser.parse_args()
 
-    mazes = init_shortcut_mazes()
     with Pool(cpu_count()) as p:
+        plt.subplot(1, 2, 1)
+        print("Example 8.2")
+        mazes = init_blocking_mazes()
         print("Dyna-Q training...")
-        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, args.time_steps, args.alpha, args.gamma, args.epsilon, args.planning_steps), [CumulativeReward(dyna_q) for _ in range(args.rounds)])), 0), label="Dyna-Q")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 3000, 1000, args.alpha, args.gamma, args.epsilon, args.planning_steps), [CumulativeReward(dyna_q) for _ in range(args.rounds)])), 0), label="Dyna-Q")
         print("Dyna-Q+ training...")
-        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, args.time_steps, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(dyna_q_plus) for _ in range(args.rounds)])), 0), label="Dyna-Q+")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 3000, 1000, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(dyna_q_plus) for _ in range(args.rounds)])), 0), label="Dyna-Q+")
         print("Altered Dyna-Q+ training...")
-        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, args.time_steps, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(altered_dyna_q_plus) for _ in range(args.rounds)])), 0), label="Altered Dyna-Q+")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 3000, 1000, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(altered_dyna_q_plus) for _ in range(args.rounds)])), 0), label="Altered Dyna-Q+")
         print("Done!")
-    plt.grid(True)
-    plt.legend()
+        plt.grid(True)
+        plt.legend()
+        plt.subplot(1, 2, 2)
+        print("Example 8.3")
+        mazes = init_shortcut_mazes()
+        print("Dyna-Q training...")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 6000, 3000, args.alpha, args.gamma, args.epsilon, args.planning_steps), [CumulativeReward(dyna_q) for _ in range(args.rounds)])), 0), label="Dyna-Q")
+        print("Dyna-Q+ training...")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 6000, 3000, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(dyna_q_plus) for _ in range(args.rounds)])), 0), label="Dyna-Q+")
+        print("Altered Dyna-Q+ training...")
+        plt.plot(np.mean(np.concatenate(p.map(Runner(mazes, 6000, 3000, args.alpha, args.gamma, args.epsilon, args.kappa, args.planning_steps), [CumulativeReward(altered_dyna_q_plus) for _ in range(args.rounds)])), 0), label="Altered Dyna-Q+")
+        print("Done!")
+        plt.grid(True)
+        plt.legend()
     plt.show()
