@@ -38,7 +38,8 @@ def policy_evaluate(task, policies, episodes):
 
 
 def uniform_update(task, steps, eval_episodes):
-    q = np.zeros((len(task) + 1, 2))
+    q = np.random.normal(size=(len(task) + 1, 2))
+    q[-1, :] = 0
     t = 0
     yield 0
     while True:
@@ -53,7 +54,8 @@ def uniform_update(task, steps, eval_episodes):
 
 
 def on_policy_update(task, steps, epsilon, eval_episodes):
-    q = np.zeros((len(task) + 1, 2))
+    q = np.random.normal(size=(len(task) + 1, 2))
+    q[-1, :] = 0
     t = 0
     yield 0
     while True:
