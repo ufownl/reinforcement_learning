@@ -8,13 +8,7 @@ from utils.parallel import Runner
 
 
 def execute_policy(policy):
-    x = random.random()
-    ax = 0
-    for i, p in enumerate(policy):
-        if ax <= x and x < ax + p:
-            return i
-        ax += p
-    return None
+    return np.random.choice(range(len(policy)), p=policy)
 
 
 def on_policy_predict(episodes, state, policies):
