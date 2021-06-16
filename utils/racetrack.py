@@ -98,6 +98,19 @@ class State:
         if random.random() < 0.1:
             vx = self.__vel_x
             vy = self.__vel_y
+        return self.__next_state(racetrack, vx, vy)
+
+    def branches(self, racetrack, action):
+        ax, ay = self.__actions[action]
+        vx = self.__vel_x + ax
+        vy = self.__vel_y + ay
+        if vx < 0 or vx >= 5 or vy < 0 or vy >= 5 or vx == 0 and vy == 0:
+            raise IndexError("Invalid action")
+        for (vx, vy), p in [((vx, vy), 0.9), ((self.__vel_x, self.__vel_y), 0.1)]:
+            s1, r, _ = self.__next_state(racetrack, vx, vy)
+            yield s1, r, p
+
+    def __next_state(self, racetrack, vx, vy):
         px = self.__pos_x + vx
         py = self.__pos_y + vy
         trajectory = [p for p in bresenham_line((self.__pos_x, self.__pos_y), (px, py))]
