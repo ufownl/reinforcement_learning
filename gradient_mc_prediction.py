@@ -36,7 +36,7 @@ def train(episodes, alpha):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gradient Monte-Carlo Prediction - State aggregation (Example 9.1).")
-    parser.add_argument("--episodes", help="number of episodes (default: 50000)", type=int, default=100000)
+    parser.add_argument("--episodes", help="number of episodes (default: 100000)", type=int, default=100000)
     parser.add_argument("--alpha", help="constant step-size parameter (default: 2e-5)", type=float, default=2e-5)
     parser.add_argument("--theta", help="accuracy of true value estimation (default: 1e-8)", type=float, default=1e-8)
     args = parser.parse_args()
