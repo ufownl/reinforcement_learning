@@ -74,7 +74,7 @@ def sqrt_ve(episodes, basis, true_values):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Gradient Monte-Carlo Prediction - Polynomial vs Fourier.")
+    parser = argparse.ArgumentParser(description="Gradient Monte-Carlo Prediction - Polynomial vs Fourier (Section 9.5.1, Section 9.5.2).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 30)", type=int, default=30)
     parser.add_argument("--episodes", help="number of episodes (default: 5000)", type=int, default=5000)
     parser.add_argument("--theta", help="accuracy of true value estimation (default: 1e-8)", type=float, default=1e-8)
