@@ -30,7 +30,8 @@ class Polynomial:
 class Fourier:
     def __init__(self, n, alpha):
         self.__n = n
-        self.__alpha = alpha
+        self.__alpha = np.ones(n + 1) * alpha
+        self.__alpha[1:] /= np.arange(1, n + 1)
 
     @property
     def orders(self):
@@ -38,9 +39,7 @@ class Fourier:
 
     @property
     def alpha(self):
-        a = np.ones(self.__n + 1) * self.__alpha
-        a[1:] /= np.arange(1, self.__n + 1)
-        return a
+        return self.__alpha
 
     def feature(self, state):
         return np.array([math.cos(math.pi * (state.index / 999) * i) for i in range(self.__n + 1)])
