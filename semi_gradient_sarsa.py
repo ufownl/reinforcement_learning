@@ -38,9 +38,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     with Pool(cpu_count()) as p:
-        plt.plot(np.mean(np.concatenate(p.map(Runner(args.episodes, args.epsilon, TileCoding(0.1)), [episode_steps for _ in range(args.rounds)])), axis=0), label="alpha=0.1")
-        plt.plot(np.mean(np.concatenate(p.map(Runner(args.episodes, args.epsilon, TileCoding(0.2)), [episode_steps for _ in range(args.rounds)])), axis=0), label="alpha=0.2")
-        plt.plot(np.mean(np.concatenate(p.map(Runner(args.episodes, args.epsilon, TileCoding(0.5)), [episode_steps for _ in range(args.rounds)])), axis=0), label="alpha=0.5")
+        for alpha in [0.1, 0.2, 0.5]:
+            plt.plot(np.mean(np.concatenate(p.map(Runner(args.episodes, args.epsilon, TileCoding(alpha)), [episode_steps for _ in range(args.rounds)])), axis=0), label="alpha=%f"%alpha)
     plt.yscale("log")
     plt.grid(True)
     plt.legend()
