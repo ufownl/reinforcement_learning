@@ -14,13 +14,14 @@ def train(episodes, epsilon, basis):
         a = basis.policy(s, w, epsilon)
         steps = 0
         while True:
+            x = basis.feature(s, a)
             s1, r = s.transition(a)
             steps += 1
             if s1 is None:
-                w += basis.alpha * (r - basis.value(s, a, w)) * basis.feature(s, a)
+                w += basis.alpha * (r - basis.value(x, w)) * x
                 break
             a1 = basis.policy(s1, w, epsilon)
-            w += basis.alpha * (r + basis.value(s1, a1, w) - basis.value(s, a, w)) * basis.feature(s, a)
+            w += basis.alpha * (r + basis.value(basis.feature(s1, a1), w) - basis.value(x, w)) * x
             s = s1
             a = a1
         yield steps

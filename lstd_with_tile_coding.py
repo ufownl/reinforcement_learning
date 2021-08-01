@@ -27,8 +27,8 @@ class TileCoding:
         else:
             return np.logical_and(state.index >= self.__p[0], state.index < self.__p[1]).reshape((self.dimensions, 1)).astype("float")
 
-    def value(self, state, weight):
-        return np.matmul(np.transpose(weight), self.feature(state)).item()
+    def value(self, x, weight):
+        return np.matmul(np.transpose(weight), x).item()
 
 
 def train(episodes, epsilon, basis):
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     weight = train(args.episodes, args.epsilon, basis)
     print("Done!")
 
-    plt.plot([basis.value(State(i), weight) for i in range(1000)], label="Approximate MC value")
+    plt.plot([basis.value(basis.feature(State(i)), weight) for i in range(1000)], label="Approximate MC value")
     plt.plot(calc_state_values(args.theta), label="True value")
     plt.grid(True)
     plt.legend()

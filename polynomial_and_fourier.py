@@ -23,8 +23,8 @@ class Polynomial:
     def feature(self, state):
         return np.array([(state.index / 999) ** i for i in range(self.__n + 1)])
 
-    def value(self, state, weight):
-        return np.matmul(weight, self.feature(state).reshape((self.__n + 1, 1))).item()
+    def value(self, x, weight):
+        return np.matmul(weight, x.reshape((self.__n + 1, 1))).item()
 
 
 class Fourier:
@@ -44,8 +44,8 @@ class Fourier:
     def feature(self, state):
         return np.array([math.cos(math.pi * (state.index / 999) * i) for i in range(self.__n + 1)])
 
-    def value(self, state, weight):
-        return np.matmul(weight, self.feature(state).reshape((self.__n + 1, 1))).item()
+    def value(self, x, weight):
+        return np.matmul(weight, x.reshape((self.__n + 1, 1))).item()
 
 
 def train(episodes, basis):
@@ -64,12 +64,13 @@ def train(episodes, basis):
         g = 0
         for t in reversed(range(len(episode) - 1)):
             g += episode[t + 1][1]
-            w += basis.alpha * (g - basis.value(episode[t][0], w)) * basis.feature(episode[t][0])
+            x = basis.feature(episode[t][0])
+            w += basis.alpha * (g - basis.value(x, w)) * x
         yield w, d / steps
 
 
 def sqrt_ve(episodes, basis, true_values):
-    return np.array([math.sqrt(sum(u * (true_values - np.array([basis.value(State(i), w) for i in range(1000)])) ** 2)) for w, u in train(episodes, basis)])
+    return np.array([math.sqrt(sum(u * (true_values - np.array([basis.value(basis.feature(State(i)), w) for i in range(1000)])) ** 2)) for w, u in train(episodes, basis)])
 
 
 if __name__ == "__main__":

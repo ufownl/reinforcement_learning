@@ -70,13 +70,13 @@ class TileCoding:
                 features[i] = features[i].reshape((-1,))
             return np.concatenate(features).reshape((-1, 1))
 
-    def value(self, state, action, weight):
-        return np.matmul(np.transpose(weight), self.feature(state, action)).item()
+    def value(self, x, weight):
+        return np.matmul(np.transpose(weight), x).item()
 
     def policy(self, state, weight, epsilon=None):
         actions = [-1.0, 0.0, 1.0]
         if not epsilon is None and random.random() < epsilon:
             return random.choice(actions)
         else:
-            q = [self.value(state, a, weight) for a in actions]
+            q = [self.value(self.feature(state, a), weight) for a in actions]
             return actions[np.argmax(q)]
