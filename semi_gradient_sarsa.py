@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Semi-gradient Sarsa - Tile Coding (Example 10.1).")
     parser.add_argument("--rounds", help="total number of running rounds (default: 100)", type=int, default=100)
     parser.add_argument("--episodes", help="number of episodes (default: 500)", type=int, default=500)
-    parser.add_argument("--epsilon", help="probability of exploration (default: 0.01)", type=float, default=0.01)
+    parser.add_argument("--epsilon", help="probability of exploration (default: 0.0)", type=float, default=0.0)
     args = parser.parse_args()
 
     with Pool(cpu_count()) as p:

@@ -75,7 +75,7 @@ class TileCoding:
 
     def policy(self, state, weight, epsilon=None):
         actions = [-1.0, 0.0, 1.0]
-        if not epsilon is None and random.random() < epsilon:
+        if not epsilon is None and epsilon > 0 and random.random() < epsilon:
             return random.choice(actions)
         else:
             q = [self.value(self.feature(state, a), weight) for a in actions]
