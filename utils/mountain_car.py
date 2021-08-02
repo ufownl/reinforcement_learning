@@ -79,4 +79,5 @@ class TileCoding:
             return random.choice(actions)
         else:
             q = [self.value(self.feature(state, a), weight) for a in actions]
-            return actions[np.argmax(q)]
+            max_q = max(q)
+            return random.choice([actions[i] for i, v in enumerate(q) if v == max_q])
