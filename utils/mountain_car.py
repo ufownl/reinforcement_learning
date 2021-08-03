@@ -73,8 +73,7 @@ class TileCoding:
     def value(self, x, weight):
         return np.matmul(np.transpose(weight), x).item()
 
-    def policy(self, state, weight, epsilon=None):
-        actions = [-1.0, 0.0, 1.0]
+    def policy(self, state, weight, epsilon=None, actions=[-1.0, 0.0, 1.0]):
         if not epsilon is None and epsilon > 0 and random.random() < epsilon:
             return random.choice(actions)
         else:
