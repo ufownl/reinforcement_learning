@@ -6,6 +6,7 @@ from utils.access_control_queuing import State, Tabular
 
 def train(steps, epsilon, n, basis):
     w = np.zeros((basis.dimensions, 1))
+    u = 0
     avg_r = 0
     state = State()
     queue = [(state, None, basis.policy(state, w, epsilon))]
@@ -22,13 +23,14 @@ def train(steps, epsilon, n, basis):
             state, _, action = queue[0]
             x = basis.feature(state, action)
             delta -= basis.value(x, w)
-            avg_r += basis.beta * delta
+            u += basis.beta * (1 - u)
+            avg_r += basis.beta / u * delta
             w += basis.alpha * delta * x
     return w, avg_r
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Differential Semi-gradient n-step Sarsa - Tabular (Section 10.5, Example 10.2).")
+    parser = argparse.ArgumentParser(description="Differential Semi-gradient n-step Sarsa - Tabular (Section 10.5, Exercise 10.9, Example 10.2).")
     parser.add_argument("--steps", help="number of steps (default: 200000000)", type=int, default=200000000)
     parser.add_argument("--alpha", help="constant step-size parameter of weight (default: 0.01)", type=float, default=0.01)
     parser.add_argument("--beta", help="constant step-size parameter of average reward (default: 0.01)", type=float, default=0.01)
