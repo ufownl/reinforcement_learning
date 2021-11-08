@@ -32,3 +32,11 @@ def eligibility(theta):
     x = feature()
     p = policy(theta)
     return x - np.sum(p * x, axis=-1, keepdims=True)
+
+
+def value(weight):
+    return weight.item()
+
+
+def dvalue(weight):
+    return np.ones_like(weight)
